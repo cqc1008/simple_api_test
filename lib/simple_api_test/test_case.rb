@@ -1,9 +1,5 @@
 module SimpleApiTest
   class TestCase
-    def initialize
-      clear_report
-    end
-
     @subclasses = []
 
     class << self

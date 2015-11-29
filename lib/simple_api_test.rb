@@ -1,6 +1,7 @@
 $:.unshift File.expand_path('..', __FILE__)
 
 require 'simple_api_test/test_case'
+require 'simple_api_test/errors'
 
 module SimpleApiTest
   class << self
@@ -15,10 +16,10 @@ module SimpleApiTest
             print '.'
           rescue AssertionFailed => e
             print 'F'
-            @failures << e
+            @failures << "#{test_case_class.to_s}##{method.to_s}\r\n#{e.message}"
           rescue => e
             print 'E'
-            @errors << e.backtrace.join("\r\n")
+            @errors << "#{test_case_class.to_s}##{method.to_s}\r\n#{e.message}\r\n" + e.backtrace.join("\r\n")
           end
         end
       end

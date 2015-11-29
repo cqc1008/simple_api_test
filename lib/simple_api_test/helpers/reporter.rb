@@ -12,6 +12,26 @@ end
 module SimpleApiTest
   module Helpers
     module Reporter
+      class << self
+        def included(base)
+          base.class_eval do
+            alias_method :initialize_without_report, :initialize
+
+            def initialize
+              initialize_without_report
+              clear_report
+            end
+
+            alias_method :request_without_report, :request
+
+            def request(url, method = 'GET', options_string = '')
+              request_without_report(url, method, options_string)
+              output_report
+            end
+          end
+        end
+      end
+
       def report_dir
         dir = 'reports'
         FileUtils.mkdir_p(dir) unless Dir.exists?(dir)
@@ -37,7 +57,7 @@ module SimpleApiTest
       end
 
       def output_report
-        File.open(report_file, 'a+') { |f| f.write(format) }
+        File.open(report_file, 'a+') { |f| f.write(format_report) }
       end
     end
   end
